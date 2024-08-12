@@ -37,7 +37,19 @@
   * [3D Models](#3d-models-resources)
   * [Images](#images-resources)
 
-### Team: Catana Radu Nicolae si Daja Mihai Bogdan<a class="anchor" id="team-image"></a>
+### Team: Catana Radu Nicolae si Coman Andrei<a class="anchor" id="team-image"></a>
+
+## Photos of our robot <b>TBD<b> <a class="anchor" id="robot-image"></a>
+
+| <img src="./images/robot-images/front.jpeg" width="90%" /> | <img src="./images/robot-images/back.jpeg" width="85%" /> | 
+| :--: | :--: | 
+| *Front* | *Back* |
+| <img src="./images/robot-images/left.jpeg" width="90%" /> | <img src="./images/robot-images/right.jpeg" width="85%" /> | 
+| *Left* | *Right* |
+| <img src="./images/robot-images/top.jpeg" width="90%" /> | <img src="./images/robot-images/bottom.jpeg" width="85%" /> | 
+| *Top* | *Bottom* |
+
+<br>
 
 # Mobility Management <a class="anchor" id="mobility-management"></a>
 ![Powertrain](./images/resources/powertrain.png "Powertrain")
