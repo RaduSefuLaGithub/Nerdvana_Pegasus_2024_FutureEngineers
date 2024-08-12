@@ -41,12 +41,12 @@
 
 ## Photos of our robot <b>TBD<b> <a class="anchor" id="robot-image"></a>
 
-| <img src="./images/robot-images/front.jpeg" width="90%" /> | <img src="./images/robot-images/back.jpeg" width="85%" /> | 
+| <img src="./images/robot_images/front.jpeg" width="90%" /> | <img src="./images/robot_images/back.jpeg" width="85%" /> | 
 | :--: | :--: | 
 | *Front* | *Back* |
-| <img src="./images/robot-images/left.jpeg" width="90%" /> | <img src="./images/robot-images/right.jpeg" width="85%" /> | 
+| <img src="./images/robot_images/left.jpeg" width="90%" /> | <img src="./images/robot_images/right.jpeg" width="85%" /> | 
 | *Left* | *Right* |
-| <img src="./images/robot-images/top.jpeg" width="90%" /> | <img src="./images/robot-images/bottom.jpeg" width="85%" /> | 
+| <img src="./images/robot_images/top.jpeg" width="90%" /> | <img src="./images/robot_images/bottom.jpeg" width="85%" /> | 
 | *Top* | *Bottom* |
 
 <br>
