@@ -68,11 +68,11 @@ To minimize friction and thereby reduce speed loss, we avoided using 3D-printed 
 Following an evaluation of different motors, we settled on a geared DC motor that comes with a magnetic encoder. This motor was selected for its lightweight and compact design, which stands out among others with comparable output. Additionally, the magnetic encoder offers greater precision than its optical counterpart. We secured the motor to the chassis using screws.
 
 **Specifications:**
-- Voltage: < 7V
-- Gear Ratio: 1:20
-- Speed: 400 ± 13% rpm
-- Torque: 0.4 ± kg·cm
-- Weight: 67.4g
+- Voltage: 5V-9V
+- Gear Ratio: 1:25 <!--???-->
+- Speed: 135RPM ± 15%
+- Torque: 3.5 ± kg·cm
+- Weight: 54g
 
 ![Drive motor](./images/resources/drive_motor.jpg "Drive motor")
 
