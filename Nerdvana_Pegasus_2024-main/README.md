@@ -52,11 +52,8 @@
 <br>
 
 # Mobility Management <a class="anchor" id="mobility-management"></a>
-![Powertrain](./images/resources/powertrain.png "Powertrain")
 
-## Powertrain <a class="anchor" id="powertrain-mechanical"></a>
-
-![Powertrain - Bottom View](./images/resources/powertrain_bottom_text.png "Powertrain - Bottom View")
+## PowerTrain <a class="anchor" id="powertrain-mechanical"></a>
 
 ### Drivetrain <a class="anchor" id="drivetrain-mechanical"></a>
 
@@ -76,6 +73,8 @@ Following an evaluation of different motors, we settled on a geared DC motor tha
 - Speed: 400 ± 13% rpm
 - Torque: 0.4 ± kg·cm
 - Weight: 67.4g
+
+![Drive motor](./images/resources/drive_motor.jpg "Drive motor")
 
 Where to buy the motor: https://www.adafruit.com/product/4416
 
