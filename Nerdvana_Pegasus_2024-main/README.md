@@ -7,19 +7,16 @@
 * [Performance Video](#video)
 * [Mobility Management](#mobility-management)
   * [Powertrain](#powertrain-mechanical)
-    * [Drivetrain](#drivetrain-mechanical)
     * [Motor](#motor-mechanical)
-    * [Motor Driver](#motor-driver-mechanical)
   * [Steering](#steering-mechanical)
-    * [Servo Motor](#servo-motor)
-  * [Chassis](#chassis-mechanical)
+    * [Steering Mechanism](#steering-mechanism)
+    * [Steering Motor](#steering-motor)
 * [Power and Sense Management](#power-and-sense-management)
-  * [Li-Po Battery](#li-po-battery)
-  * [Teensy 4.1](#teensy-4.1)
-  * [LIDAR](#lidar-sensor)
+  * [Battery](#mindstorm-battery)
+  * [Inventor Hub](#inventor-hub)
+  * [Distance Sensor](#distance-sensor)
   * [IMU](#imu-sensor)
   * [Pixycam 2.1](#pixy-cam-2.1)
-  * [Voltage Regulator](#voltage-regulator-(L7805CV))
   * [Circuit Diagram](#circuit-diagram)
 * [Code for each component](#code-for-each-component)
   * [Drive Motor](#drive-motor-code)
@@ -34,7 +31,6 @@
   * [Final Round](#final-management)
 * [Randomizer](#randomizer)
 * [Resources](#resources)
-  * [3D Models](#3d-models-resources)
   * [Images](#images-resources)
 
 ### Team: Catana Radu Nicolae si Coman Andrei<a class="anchor" id="team-image"></a>
@@ -72,14 +68,15 @@ Where to buy the drive motor: https://raisingrobots.com/product/lego-technic-med
 
 As I mentioned, a gear connected to the motor drives a series of gears located at the base of the robot. When the gears are properly aligned, this setup ensures that both wheels rotate in the same direction. Below is the explaination of the rack:
 
-![Rack Explanation](./images/resources/Rack_Explained.jpg "Rack Explanation")
+![Rack Explanation](./images/Rack_Explained.jpg "Rack Explanation")
 
 ## Steering <a class="anchor" id="steering-mechanical"></a>
 
-![Powertrain - Angled Bottom View](./images/resources/bottom_angle.png "Powertrain - Angled Bottom View")
+### Steering Mechanism <a class="anchor" id="steering-mechanism"></a>
 
 We reviewed several steering systems and decided that this one would be the best optimized for our circuit. This system is designed as a parallelogram, making it simple and easy to handle, allowing for smooth turns at a satisfactory angle.
-### Steering Motor <a class="anchor" id="Steering-Motor"></a>
+
+### Steering Motor <a class="anchor" id="steering-motor"></a>
 
 For steering, we selected the LEGO Tehnic Small Angular Motor, favoring it for its high torque and swift response.
 
@@ -90,7 +87,7 @@ For steering, we selected the LEGO Tehnic Small Angular Motor, favoring it for i
 - Weight: 32g
 - Rotation Angle: 360 degrees
 
-![LEGO Tehnic Small Angular Motor](./images/resources/steering_motor.jpg "LEGO Tehnic Small Angular Motor")
+![LEGO Tehnic Small Angular Motor](./images/resources/steering_motor.png "LEGO Tehnic Small Angular Motor")
 
 Where to buy the steering motor: https://raisingrobots.com/product/lego-technic-small-angular-motor/
 
@@ -98,11 +95,11 @@ To connect the Spike motor to the steering system, we used a bar of lego.
 
 # Power and Sense Management <a class="anchor" id="power-and-sense-management"></a>
 
-### Mindstorm Battery <a class="anchor" id="mindstorm-battery"></a>
+### Recharchable Mindstorm Battery <a class="anchor" id="mindstorm-battery"></a>
 
 We chose this battery because of the Inventor Hub, which is a key component of our robot. This battery is the same type used in the Spike system, which is why its specifications are only available under the Spike model. It has a capacity of 7.3V and 2100mAh, with a weight of 110g. We selected it to make the robot lighter and to take advantage of its quick charging capability.
 
-![Rechargeable Battery](./images/resources/battery.jpg "Rechargeable Battery")
+![Rechargeable Mindstorm Battery](./images/resources/battery.jpg "Rechargeable Mindstorm Battery")
 
 Where to buy the battery: https://rebrickable.com/parts/67704/battery-pack-rechargeable-mindstorms-robot-inventor/3/
 
