@@ -55,84 +55,72 @@
 
 ## PowerTrain <a class="anchor" id="powertrain-mechanical"></a>
 
-### Drivetrain <a class="anchor" id="drivetrain-mechanical"></a>
-
-After reflecting on our experience from last year's competition, where we utilized a rear-wheel drive (RWD) with a differential, we opted for an all-wheel drive (AWD) system for this year's national event. We were motivated to switch because the RWD struggled with steering due to the lack of power in the front wheels. Moreover, an AWD system ensures a more even distribution of power.
-
-However, after deciding to incorporate a LIDAR sensor, we found it essential to mount the sensor low to improve its accuracy. Given its considerable size, and the space constraints for the front differential and driveshaft—further challenged by our decision to place the servo lower to make room for the LIDAR—we ultimately returned to the RWD configuration.
-
-To minimize friction and thereby reduce speed loss, we avoided using 3D-printed components for the moving parts in the drivetrain. Instead, we utilized Lego pieces, which are molded with high precision and therefore have a very low friction coefficient. The 3D-printed parts were reserved for the chassis and for mounting the electronic components onto the Lego structure.
 
 ### Motor <a class="anchor" id="motor-mechanical"></a>
 
-Following an evaluation of different motors, we settled on a geared DC motor that comes with a magnetic encoder. This motor was selected for its lightweight and compact design, which stands out among others with comparable output. Additionally, the magnetic encoder offers greater precision than its optical counterpart. We secured the motor to the chassis using screws.
+Following an evaluation of different motors, we settled on a LEGO Tehnic Medium Angular Motor that on which we attached a gear. This motor was chosen for its lower-load, fast-response applications, so we can make evaluations faster. Also, it's a simple form factor for building because it can be easily connected to other components.
 
 **Specifications:**
 - Voltage: 5V-9V
-- Gear Ratio: 1:25 <!--???-->
 - Speed: 135RPM ± 15%
-- Torque: 3.5 ± kg·cm
+- Torque: 3.5 ± Ncm
 - Weight: 54g
 
-![Drive motor](./images/resources/drive_motor.jpg "Drive motor")
+![LEGO Tehnic Medium Angular Motor](./images/resources/drive_motor.jpg "LEGO Tehnic Medium Angular Motor")
 
-Where to buy the motor: https://www.adafruit.com/product/4416
+Where to buy the drive motor: https://raisingrobots.com/product/lego-technic-medium-angular-motor/
 
-To connect the motor's axle to a Lego-compatible axle, we created a custom 3D-printed adapter.
+As I mentioned, a gear connected to the motor drives a series of gears located at the base of the robot. When the gears are properly aligned, this setup ensures that both wheels rotate in the same direction. Below is the explaination of the rack:
 
-![Gearmotor to axle - 3D Model](./images/resources/DriveMotorToLegoAxle.jpg "Gearmotor to axle 3D piece")
-
-### Motor Driver <a class="anchor" id="motor-driver-mechanical"></a>
-![Motor driver](./images/resources/motor_driver.png "Motor driver")
-
-To control the speed of the drive motor, we utilized a SparkFun Dual TB6612FNG motor driver.
-
-Where to buy the motor driver: https://www.sparkfun.com/products/14450
+![Rack Explanation](./images/resources/Rack_Explained.jpg "Rack Explanation")
 
 ## Steering <a class="anchor" id="steering-mechanical"></a>
 
 ![Powertrain - Angled Bottom View](./images/resources/bottom_angle.png "Powertrain - Angled Bottom View")
 
-After experimenting with various steering mechanisms such as Ackermann steering and bell-crank steering, we assessed their advantages and drawbacks. Ultimately, we chose a straightforward steering system consisting of a parallelogram linkage. This decision was made because the alternative systems were either too large or too complex to implement effectively. Our selected mechanism is simple, light, and compact, providing a satisfactory steering angle. While it does not adhere to the Ackermann steering geometry, our tests showed that for our robot's small size and light weight, this omission was not critically significant.
+We reviewed several steering systems and decided that this one would be the best optimized for our circuit. This system is designed as a parallelogram, making it simple and easy to handle, allowing for smooth turns at a satisfactory angle.
+### Steering Motor <a class="anchor" id="Steering-Motor"></a>
 
-### Servo Motor <a class="anchor" id="servo-motor"></a>
-![MG996R Servo](./images/resources/MG996R.webp "MG996R Servo")
-
-For steering, we selected the MG996R servo motor, favoring it for its high torque and swift response.
+For steering, we selected the LEGO Tehnic Small Angular Motor, favoring it for its high torque and swift response.
 
 **Specifications:**
-- Weight: 55g
-- Stall torque: 9.4 kg/cm (4.8v)
-- Operating speed: 0.17 s/60 degree (4.8v)
-- Rotation angle: 180 degree
+- Voltage: 3.3V-6V
+- Speed: 85RPM ± 15%
+- Torque: 1.8 ± Ncm
+- Weight: 32g
+- Rotation Angle: 360 degrees
 
-Where to buy the servo motor: https://www.sigmanortec.ro/servomotor-mg996r-180-13kg
+![LEGO Tehnic Small Angular Motor](./images/resources/steering_motor.jpg "LEGO Tehnic Small Angular Motor")
 
-To connect the servo motor to the steering system, we fashioned a custom 3D-printed adapter. Given the dynamic geometry of the system, the connector couldn't be a single rigid piece because its length needed to be adjustable according to the wheel positions. Thus, we designed a two-part beam: the larger piece attaches to the servo and the smaller piece to the steering mechanism. The smaller piece slides into the larger one, permitting the beam's length to vary. We introduced a slight space between the two components to ensure smooth movement, while also ensuring that a significant portion of the smaller piece remains within the larger one to avoid disconnection or bending.
+Where to buy the steering motor: https://raisingrobots.com/product/lego-technic-small-angular-motor/
 
-![Servo Arm - 3D Model](./images/resources/ServoArm.png "Servo Arm")
+To connect the Spike motor to the steering system, we used a bar of lego.
 
 # Power and Sense Management <a class="anchor" id="power-and-sense-management"></a>
 
-### Li-Po Battery <a class="anchor" id="li-po-battery"></a>
-![Li-Po Battery](./images/resources/battery.png "Li-Po Battery")
+### Mindstorm Battery <a class="anchor" id="mindstorm-battery"></a>
 
-Last year, we powered our robot with a 6-pack of AA Nickel-Metal Hydride (NiMH) batteries, which provided approximately 7.2V and 2000mAh but weighed around 650g. With our goal of building a smaller and lighter robot, we recognized the need for a different power source. We chose a Lithium Polymer (Li-Po) battery for its lighter weight, more compact size, and quicker charging capabilities. The specific model we selected is the *LiPo GENS ACE Soaring* (7.4V, 2200mAh, 20C). Switching to this battery reduced the weight of our power pack from 650g to 100g, almost halving the robot's weight. Moreover, the battery is more than twice as small in terms of volume.
+We chose this battery because of the Inventor Hub, which is a key component of our robot. This battery is the same type used in the Spike system, which is why its specifications are only available under the Spike model. It has a capacity of 7.3V and 2100mAh, with a weight of 110g. We selected it to make the robot lighter and to take advantage of its quick charging capability.
 
-Where to buy the battery: https://www.sierra.ro/Acumulator-LiPo-GENS-ACE-Soaring-7-4-V--2200-mA--20C-p11141p.html
+![Rechargeable Battery](./images/resources/battery.jpg "Rechargeable Battery")
 
-![PCB Mount - 3D Model](./images/resources/PCB_Mount.jpg "PCB Mount - 3D Model")
+Where to buy the battery: https://rebrickable.com/parts/67704/battery-pack-rechargeable-mindstorms-robot-inventor/3/
 
-### Voltage regulator <a class="anchor" id="voltage-regulator"></a>
-![Voltage regulator (L7805CV)](./images/resources/linear_voltage_regulator.png "Voltage regulator (L7805CV)")
+### Inventor Hub <a class="anchor" id="inventor-hub"></a>
 
-To provide the Teensy 4.1 with the required 5V, we needed to decrease the output from the 7.4V battery, which can reach up to 8.4V when fully charged. We employed a linear voltage regulator, the L7805CV, capable of converting input voltages below 35V down to a steady 5V.
+This component is crucial for our robot because it allows us to use the hub's gyroscope to maintain a straighter path. We've implemented PID control on the Gyro to minimize errors in the wall-following system, thereby reducing the chances of the robot touching the track walls.Additionally, all the motors and sensors are connected to it, giving us complete control over every component. We also used the button lights for debugging to indicate whether we're using PID on the Gyro or on the two walls between which the robot is positioned.
 
-For the drive motor, which we want to operate at higher speeds, we use a separate voltage regulator, the L7806CV, to step down the battery's 7.4V to 6V. This approach allows us to extract more speed from the motor while maintaining consistent performance across different battery charge levels.
+![Inventor Hub](./images/resources/inventor_hub.png "Inventor Hub")
 
-Where to buy the 5V voltage regulator: https://ro.mouser.com/ProductDetail/STMicroelectronics/L7805CV?qs=9NrABl3fj%2FqplZAHiYUxWg%3D%3D
+Where to buy the Inventor Hub: https://rebrickable.com/parts/67718/hub-programmable-mindstorms-robot-inventor/#buy_parts
 
-Where to buy the 6V voltage regulator: https://ro.mouser.com/ProductDetail/STMicroelectronics/L7806CV?qs=K4DpzJ20gDEC%252BHE13eVUwg%3D%3D
+### Distance Sensor <a class="anchor" id="distance-sensor"></a>
+
+We used distance sensors for their precision when the robot is positioned between two walls, allowing us to adjust it to stay exactly in the center of the corridor. This is beneficial in both challenges, as the front camera will remain centered, enabling it to detect blocks more quickly and easily.
+
+![LEGO Tehnic Distance Sensor](./images/resources/distance_sensor.webp "LEGO Tehnic Distance Sensor")
+
+Where to buy the LEGO Tehnic Distance Sensor: https://education.lego.com/en-us/products/lego-technic-distance-sensor/45604/
 
 ### Circuit diagram <a class="anchor" id="circuit-diagram"></a>
 ![Circuit diagram](./electrical-diagram/circuit.png "Circuit diagram")
@@ -433,26 +421,12 @@ To ensure the robot's ability to adapt to any course, we developed a randomizer 
 
 # Resources <a class="anchor" id="resources"></a>
 
-## 3D Models <a class="anchor" id="3d-models-resources"></a>
-<li> DC Motor - https://grabcad.com/library/12v-dc-motor-350rpm-w-encoder-from-dfrobot-1
-<li> MG996R Servo motor - https://grabcad.com/library/servomotor-mg996r-4
-<li> Sparkfun Motor Driver - https://grabcad.com/library/sparkfun-motor-driver-dual-tb6612fng-1a-1
-<li> Teensy 4.1 - https://grabcad.com/library/teensy-4-1-2
-<li> RPLIDAR A1 - https://grabcad.com/library/rplidar-a1-holder-1
-<li> Pixycam 2.1 - https://grabcad.com/library/cmucam-pixy-2-2
-<li> LiPo Battery - https://grabcad.com/library/2s-7-4v-li-po-battery-1
-<li> Grove BMI088 Gyroscope - https://grabcad.com/library/mpu6050-1
-<li> Linear Voltage Regulator - https://grabcad.com/library/linear-voltage-regulators-78xx-1
-<li> Prototype Board - https://grabcad.com/library/pcb-board-prototype-3x7cm-1
-
-<br>
-
 ## Images <a class="anchor" id="images-resources"></a>
-<li> DC Motor - https://www.adafruit.com/product/4416
-<li> Sparkfun Motor Driver - https://cdn.sparkfun.com//assets/parts/1/2/4/8/2/14450a-01.jpg
-<li> MG996R Servo motor - https://www.digikey.com/htmldatasheets/production/5014637/0/0/1/media/bg1.jpg
-<li> Teensy 4.1 - https://circuitpython.org/assets/images/boards/large/teensy41.jpg
-<li> RPLIDAR A1 - https://www.waveshare.com/wiki/RPLIDAR_A1
+<li> LEGO Tehnic Medium Angular Motor - https://img.bricklink.com/ItemImage/PN/86/54696c01.png
+<li> LEGO Tehnic Small Angular Motor - https://i.sstatic.net/th7N7.png
+<li> Recharchable Battery - https://cdn.rebrickable.com/media/thumbs/parts/elements/6299315.jpg/250x250p.jpg
+<li> Inventor Hub - https://cdn.rebrickable.com/media/thumbs/parts/ldraw/3/67718.png/250x250p.png
+<li> Distance Sensor - https://cdn.toypro.com/media/cache/tp_product_detail/uploads/images/custom/43694-src.webp
 <li> Pixycam 2.1 - https://pixycam.com/wp-content/uploads/2021/05/pixy2_3_result.jpg
 <li> LiPo Battery - https://www.autorc.ro/16064-large_default/acumulator-lipo-gens-ace-3s-111v-2200mah-20c-mufa-xt60.jpg
 <li> Grove BMI088 Gyroscope - https://files.seeedstudio.com/wiki/Grove-6-Axis_Accelerometer-Gyroscope-BMI088/img/main.jpg
