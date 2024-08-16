@@ -133,7 +133,7 @@ We chose to use the OpenMV Cam H7 R2 because of its high performance in color re
 
 ![OpenMV Cam H7 R2](./images/resources/camera.webp "OpenMV Cam H7 R2")
 
-Where to buy the SPIKE Smart Camera Breakout Board: https://openmv.io/products/openmv-cam-h7-r2
+Where to buy the OpenMV Cam H7 R2: https://openmv.io/products/openmv-cam-h7-r2
 
 # Circuit diagram <a class="anchor" id="circuit-diagram"></a>
 ![Circuit diagram](./electrical-diagram/circuit_spike.png "Circuit diagram")
