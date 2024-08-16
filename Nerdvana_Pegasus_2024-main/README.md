@@ -128,40 +128,21 @@ Where to buy the LEGO Tehnic Distance Sensor: https://education.lego.com/en-us/p
 
 ## Drive Motor <a class="anchor" id="drive-motor-code"></a>
 
-The motor driver can be directly managed with a single PWM pin that adjusts the motor's speed and two digital pins designated for determining the motor's rotation direction. Consequently, the use of any external library for motor manipulation was unnecessary.
+The LEGO Technic Medium Angular Motor can be controlled using the Pybricks library, allowing us to set the robot’s speed. Additionally, we can easily calculate the distance the robot has traveled by using a function that returns the motor’s rotation angle, which can be reset whenever needed.
 
-We devised two functions within our control system: one to modify the motor's velocity and another to halt it effectively, incorporating a braking feature. To achieve this, we convert the desired speed from our established scale of -100 to +100 to the PWM equivalent of 0 to 255. The motor's direction is then adjusted according to the sign of the input value.
+Below are the functions and the formula for distance that we used in the code for the drive motor:
 
-```ino
-void motor_start(int speed) {
-  speed = -speed;  
-  int out = abs(speed) * 2.55; // Convert speed to PWM value (0 to 255)
-  if(speed >= 0) { // Forward direction
-    digitalWrite(AIN1, HIGH);
-    digitalWrite(AIN2, LOW);
-  }
-  else { // Reverse direction
-    digitalWrite(AIN1, LOW);
-    digitalWrite(AIN2, HIGH);
-  }
-  analogWrite(PWM1, out);
-
-  Serial << "speed: " << speed << "\n";
-}
-
-void motor_stop() {
-  motor_start(-10); 
-}
-```
-
-However, for the encoder, we required a specialized library to handle the more complex signal processing. The library we use for interfacing with the encoder is called *Encoder.h*.
-
-The encoder operates with a straightforward function that we found easy to comprehend and program. The constant with which we multiply the encoder's output value was determined empirically through multiple tests with varying distances. This calibration process allowed us to accurately convert the encoder's readings into centimeters.
-
-```ino
-long read_motor_encoder() {
-  return (0.01285) * (double)myEnc.read();
-}
+```py
+from pybricks.pupdevices import Motor
+from umath import pi
+drivingMotor = Motor(Port.A)
+DrivingSpeed = 1000
+WheelRadiusMM = 28
+GearRatio = 2.5
+drivingMotor.run(DrivingSpeed)
+DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360
+drivingMotor.brake()
+drivingMotor.reset_angle(0)
 ```
 
 ## Servo Motor <a class="anchor" id="servo-motor-code"></a>
