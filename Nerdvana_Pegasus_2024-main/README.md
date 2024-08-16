@@ -120,7 +120,7 @@ We used distance sensors for their precision when the robot is positioned betwee
 Where to buy the LEGO Tehnic Distance Sensor: https://education.lego.com/en-us/products/lego-technic-distance-sensor/45604/
 
 # Circuit diagram <a class="anchor" id="circuit-diagram"></a>
-![Circuit diagram](./electrical-diagram/circuit_spike_.png "Circuit diagram")
+![Circuit diagram](./electrical-diagram/circuit_spike.png "Circuit diagram")
 
 <br>
 
