@@ -15,12 +15,12 @@
   * [Battery](#mindstorm-battery)
   * [Inventor Hub](#inventor-hub)
   * [Distance Sensor](#distance-sensor)
-  * [IMU](#imu-sensor)
+  * [Camera Adapter](#camera-adapter)
   * [Pixycam 2.1](#pixy-cam-2.1)
 * [Circuit Diagram](#circuit-diagram)
 * [Code for each component](#code-for-each-component)
   * [Drive Motor](#drive-motor-code)
-  * [Servo Motor](#servo-motor-code)
+  * [Steering Motor](#steering-motor-code)
   * [Camera](#camera-code)
   * [LIDAR](#lidar-code)
     * [Python Data Visualization](#python-data-visualization)
@@ -119,6 +119,14 @@ We used distance sensors for their precision when the robot is positioned betwee
 
 Where to buy the LEGO Tehnic Distance Sensor: https://education.lego.com/en-us/products/lego-technic-distance-sensor/45604/
 
+### Camera Adapter <a class="anchor" id="camera-adapter"></a>
+
+We selected this breakout board for the robot’s front camera because it ensures durability and consistent performance. Additionally, it’s equipped with a 5V buck converter, providing high-power performance and enabling the creation of complex LED displays.
+
+![SPIKE Smart Camera Breakout Board](./images/resources/camera_adapter.webp "SPIKE Smart Camera Breakout Board")
+
+Where to buy the SPIKE Smart Camera Breakout Board: https://www.antonsmindstorms.com/product/spike-smart-camera-breakout-board-spike-openmv/
+
 # Circuit diagram <a class="anchor" id="circuit-diagram"></a>
 ![Circuit diagram](./electrical-diagram/circuit_spike.png "Circuit diagram")
 
@@ -132,7 +140,7 @@ The LEGO Technic Medium Angular Motor can be controlled using the Pybricks libra
 
 Below are the functions and the formula for distance that we used in the code for the drive motor:
 
-```py
+```mpy
 from pybricks.pupdevices import Motor
 from umath import pi
 drivingMotor = Motor(Port.A)
@@ -145,17 +153,12 @@ drivingMotor.brake()
 drivingMotor.reset_angle(0)
 ```
 
-## Servo Motor <a class="anchor" id="servo-motor-code"></a>
+## Steering Motor <a class="anchor" id="steering-motor-code"></a>
 
-For controlling the servo motor, we utilize the *Servo.h* library, which provides the necessary functions to manage the servo's movements. Initially, we configure the servo by establishing its range, defining the maximum and minimum angles it can achieve in both directions. This ensures that we can accurately position the servo within its operational limits.
 
-```ino
-// Servo
-void servo_setup() {
-  servo.attach(SERVO_PIN, 1400, 1611);
-  move_servo(0);
-  delay(50);
-}
+
+```mpy
+
 ```
 
 The gyro sensor's measurement of the robot's rotation angle is essential for precise spatial positioning. This angle adjusts the lidar data to reflect true distances, accounting for changes in position and orientation. Neglecting this leads to mapping inaccuracies, hence, rotation compensation is critical for precise navigation.
@@ -405,10 +408,8 @@ To ensure the robot's ability to adapt to any course, we developed a randomizer 
 <li> Recharchable Battery - https://cdn.rebrickable.com/media/thumbs/parts/elements/6299315.jpg/250x250p.jpg
 <li> Inventor Hub - https://cdn.rebrickable.com/media/thumbs/parts/ldraw/3/67718.png/250x250p.png
 <li> Distance Sensor - https://cdn.toypro.com/media/cache/tp_product_detail/uploads/images/custom/43694-src.webp
+<li> SPIKE Smart Camera Breakout Board - https://www.antonsmindstorms.com/wp-content/uploads/2023/08/20230817_121845-scaled-jpg.webp
 <li> Pixycam 2.1 - https://pixycam.com/wp-content/uploads/2021/05/pixy2_3_result.jpg
-<li> LiPo Battery - https://www.autorc.ro/16064-large_default/acumulator-lipo-gens-ace-3s-111v-2200mah-20c-mufa-xt60.jpg
-<li> Grove BMI088 Gyroscope - https://files.seeedstudio.com/wiki/Grove-6-Axis_Accelerometer-Gyroscope-BMI088/img/main.jpg
-<li> Linear voltage regulator - https://ro.farnell.com/productimages/standard/en_GB/GE3TO220-40.jpg
 
 
 <br>
