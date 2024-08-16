@@ -16,7 +16,7 @@
   * [Inventor Hub](#inventor-hub)
   * [Distance Sensor](#distance-sensor)
   * [Camera Adapter](#camera-adapter)
-  * [Pixycam 2.1](#pixy-cam-2.1)
+  * [Camera](#camera)
 * [Circuit Diagram](#circuit-diagram)
 * [Code for each component](#code-for-each-component)
   * [Drive Motor](#drive-motor-code)
@@ -126,6 +126,14 @@ We selected this breakout board for the robot’s front camera because it ensure
 ![SPIKE Smart Camera Breakout Board](./images/resources/camera_adapter.webp "SPIKE Smart Camera Breakout Board")
 
 Where to buy the SPIKE Smart Camera Breakout Board: https://www.antonsmindstorms.com/product/spike-smart-camera-breakout-board-spike-openmv/
+
+### Camera <a class="anchor" id="camera"></a>
+
+We chose to use the OpenMV Cam H7 R2 because of its high performance in color recognition. A key advantage of this camera is its microcontroller, which quickly transmits images using Python, making it easy to implement.
+
+![OpenMV Cam H7 R2](./images/resources/camera.webp "OpenMV Cam H7 R2")
+
+Where to buy the SPIKE Smart Camera Breakout Board: https://openmv.io/products/openmv-cam-h7-r2
 
 # Circuit diagram <a class="anchor" id="circuit-diagram"></a>
 ![Circuit diagram](./electrical-diagram/circuit_spike.png "Circuit diagram")
@@ -407,9 +415,9 @@ To ensure the robot's ability to adapt to any course, we developed a randomizer 
 <li> LEGO Tehnic Small Angular Motor - https://i.sstatic.net/th7N7.png
 <li> Recharchable Battery - https://cdn.rebrickable.com/media/thumbs/parts/elements/6299315.jpg/250x250p.jpg
 <li> Inventor Hub - https://cdn.rebrickable.com/media/thumbs/parts/ldraw/3/67718.png/250x250p.png
-<li> Distance Sensor - https://cdn.toypro.com/media/cache/tp_product_detail/uploads/images/custom/43694-src.webp
+<li> LEGO Tehnic Distance Sensor - https://cdn.toypro.com/media/cache/tp_product_detail/uploads/images/custom/43694-src.webp
 <li> SPIKE Smart Camera Breakout Board - https://www.antonsmindstorms.com/wp-content/uploads/2023/08/20230817_121845-scaled-jpg.webp
-<li> Pixycam 2.1 - https://pixycam.com/wp-content/uploads/2021/05/pixy2_3_result.jpg
+<li> OpenMV Cam H7 R2 - https://openmv.io/cdn/shop/files/clean1080_a857bc07-b943-445d-9f7c-27d506a3a0dd_1000x_crop_center.jpg
 
 
 <br>
