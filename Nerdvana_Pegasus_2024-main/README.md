@@ -22,10 +22,8 @@
   * [Drive Motor](#drive-motor-code)
   * [Steering Motor](#steering-motor-code)
   * [Camera](#camera-code)
-  * [LIDAR](#lidar-code)
-    * [Python Data Visualization](#python-data-visualization)
+  * [Distance Sensor](#distance-sensor-code)
   * [IMU](#gyro-sensor-code)
-  * [SD Card](#sd-card-code)
 * [Obstacle Management](#obstacle-management)
   * [Qualification Round](#quali-management)
   * [Final Round](#final-management)
@@ -146,17 +144,10 @@ Where to buy the OpenMV Cam H7 R2: https://openmv.io/products/openmv-cam-h7-r2
 
 The LEGO Technic Medium Angular Motor can be controlled using the Pybricks library, allowing us to set the robot’s speed. Additionally, we can easily calculate the distance the robot has traveled by using a function that returns the motor’s rotation angle, which can be reset whenever needed.
 
-Below are the functions and the formula for distance that we used in the code for the drive motor:
+Below are the functions that we used in the code for the drive motor: TBD
 
 ```mpy
-from pybricks.pupdevices import Motor
-from umath import pi
-drivingMotor = Motor(Port.A)
-DrivingSpeed = 1000
-WheelRadiusMM = 28
-GearRatio = 2.5
 drivingMotor.run(DrivingSpeed)
-DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360
 drivingMotor.brake()
 drivingMotor.reset_angle(0)
 ```
@@ -171,6 +162,16 @@ drivingMotor.reset_angle(0)
 
 The gyro sensor's measurement of the robot's rotation angle is essential for precise spatial positioning. This angle adjusts the lidar data to reflect true distances, accounting for changes in position and orientation. Neglecting this leads to mapping inaccuracies, hence, rotation compensation is critical for precise navigation.
 
+
+## Camera <a class="anchor" id="camera-code"></a>
+
+Now that we’ve successfully implemented the functions for the driving and steering motors, we need to enable the robot to detect the cubes it needs to avoid. To communicate with the Inventor Hub, we used the UART protocol.
+
+Inventor Hub code:
+
+```mpy
+
+```
 
 ## IMU <a class="anchor" id="gyro-sensor-code"></a>
 
