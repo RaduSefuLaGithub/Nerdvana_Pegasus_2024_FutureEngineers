@@ -173,6 +173,22 @@ Inventor Hub code:
 
 ```
 
+Camera code:
+
+```mpy
+import pyb
+from pyb import UART
+from pupremote import PUPRemoteSensor, OPENMV
+# UART 3 and baudrate
+uart = UART(3, 115200)
+# power=True is needed for OpenMV RT. H7 can go without power
+p=PUPRemoteSensor(power=True)
+# Define a data channel to read on the hub
+p.add_channel('blob', to_hub_fmt='hhhhh')
+```
+
+
+
 ## IMU <a class="anchor" id="gyro-sensor-code"></a>
 
 To utilize the gyro sensor, we needed to include the _BMI088.h_ library. During initialization, we allocate a 10-second window to measure the sensor's drift, allowing us to refine the robot's angular readings for greater precision. Additionally, we configure the sensor's output data rate to 400Hz and set the bandwidth to 47Hz. The bandwidth determines the frequency of data sampling by the sensor; a higher bandwidth yields more precise data at the cost of increased power consumption. We also designate pin 15 as an input and attach an interrupt to it, enabling us to capture data from the sensor as soon as it becomes available.
