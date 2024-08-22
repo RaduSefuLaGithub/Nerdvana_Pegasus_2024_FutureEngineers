@@ -7,7 +7,7 @@
 * [Performance Video](#video)
 * [Mobility Management](#mobility-management)
   * [Powertrain](#powertrain-mechanical)
-    * [Motor](#motor-mechanical)
+    * [Drive Motor](#drive-motor-mechanical)
   * [Steering](#steering-mechanical)
     * [Steering Mechanism](#steering-mechanism)
     * [Steering Motor](#steering-motor)
@@ -49,7 +49,7 @@
 ## PowerTrain <a class="anchor" id="powertrain-mechanical"></a>
 
 
-### Motor <a class="anchor" id="motor-mechanical"></a>
+### Drive Motor <a class="anchor" id="drive-motor-mechanical"></a>
 
 Following an evaluation of different motors, we settled on a LEGO Tehnic Medium Angular Motor that on which we attached a gear. This motor was chosen for its lower-load, fast-response applications, so we can make evaluations faster. Also, it's a simple form factor for building because it can be easily connected to other components.
 
@@ -198,7 +198,6 @@ To ensure the robot makes its turns at the desired angle as accurately as possib
 
 ```py
 global GyroOffSet, SteeringKP, SteeringKD
-GyroOffSet = 0
 def TurnLeft():
     global GyroOffSet, SteeringDeg, SteeringKP, SteeringKD
     SteeringDeg = -SteeringDeg #This variable is calculated below, where the code for the qualification round is explained.
@@ -209,7 +208,6 @@ def TurnLeft():
         SteeringErr = SteeringDeg-steeringMotor.angle()
         steeringMotor.dc(SteeringErr*SteeringKP+(SteeringErr-LastSteeringErr)*SteeringKD)
         LastSteeringErr = SteeringErr
-
     GyroOffSet += 90
 
 def TurnRight():
@@ -221,7 +219,6 @@ def TurnRight():
         SteeringErr = SteeringDeg-steeringMotor.angle()
         steeringMotor.dc(SteeringErr*SteeringKP+(SteeringErr-LastSteeringErr)*SteeringKD)
         LastSteeringErr = SteeringErr
-
     GyroOffSet -= 90
 ```
 
