@@ -192,6 +192,39 @@ def FindServoLimits():
     MiddleAngle = 0
 ```
 
+We conducted several tests to make the robot turn left or right without hitting the walls of the course. Based on our trials, we decided that the robot should turn along a circular radius that it determines as soon as it detects the need to turn. This idea came to us after performing mathematical calculations, leading us to conclude that this approach would enable the robot to make turns as quickly as possible, thereby reducing the time it takes to complete a lap.
+
+To ensure the robot makes its turns at the desired angle as accurately as possible, we decided to use a PID (Proportional–Integral–Derivative) controller to adjust the steering motor's power based on the calculated angle. We set the I constant to 0 because it didn't seem to affect the program. To execute the rotation, we reduced the driving motor's speed to half of its usual value, allowing the robot to complete the maneuver more efficiently. After completing the turn, we update the robot with a new gyro offset.
+
+```py
+global GyroOffSet, SteeringKP, SteeringKD
+GyroOffSet = 0
+def TurnLeft():
+    global GyroOffSet, SteeringDeg, SteeringKP, SteeringKD
+    SteeringDeg = -SteeringDeg #This variable is calculated below, where the code for the qualification round is explained.
+    SteeringErr = 0
+    LastSteeringErr = 0
+    while GetActualHeading() > -75:
+        drivingMotor.run(DrivingSpeed/2)
+        SteeringErr = SteeringDeg-steeringMotor.angle()
+        steeringMotor.dc(SteeringErr*SteeringKP+(SteeringErr-LastSteeringErr)*SteeringKD)
+        LastSteeringErr = SteeringErr
+
+    GyroOffSet += 90
+
+def TurnRight():
+    global GyroOffSet, SteeringDeg, SteeringKP, SteeringKD
+    SteeringErr = 0
+    LastSteeringErr = 0
+    while GetActualHeading() < 75:
+        drivingMotor.run(DrivingSpeed/2)
+        SteeringErr = SteeringDeg-steeringMotor.angle()
+        steeringMotor.dc(SteeringErr*SteeringKP+(SteeringErr-LastSteeringErr)*SteeringKD)
+        LastSteeringErr = SteeringErr
+
+    GyroOffSet -= 90
+```
+
 ## Distance Sensor <a class="anchor" id="distance-sensor-code"></a>
 
 To calculate the distance between the walls and the robot’s sensors, we had to use a mathematical formula because, if the robot was misaligned, the function from the pybricks.pupdevices import UltrasonicSensor library would return inaccurate readings. Therefore, we applied trigonometry by multiplying the result by the cosine of the robot’s angle. For this, we used the umath import fabs, radians, cos library.
@@ -216,7 +249,7 @@ def CalculateSideSensorProcentage():
     global DistST
     global DistDR
     global DistBetweenUltraSonics
-    if RawDistST!=2000 and RawDistDR!=2000:#In this case, it still detects both walls at a relatively similar distance.
+    if RawDistST!=2000 and RawDistDR!=2000: #In this case, it still detects both walls at a relatively similar distance.
         Radians = radians(Degrees)
         DistST = RawDistST * cos(Radians)
         DistDR = RawDistDR * cos(Radians)
