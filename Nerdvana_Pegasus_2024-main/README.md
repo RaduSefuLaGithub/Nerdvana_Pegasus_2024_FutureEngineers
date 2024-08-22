@@ -155,9 +155,42 @@ drivingMotor.reset_angle(0)
 ## Steering Motor <a class="anchor" id="steering-motor-code"></a>
 
 
+First, to optimize the robot’s turning efficiency, we determined the servo limits by rotating the motor fully to the left and right, using the angle-reading function from the pybricks.pupdevices library. Additionally, we used the stopwatch tools from the pybricks.tools library to precisely control the timing for how long the motor should turn in each direction.
 
 ```mpy
-
+def FindServoLimits():
+    global ServoCheckTime
+    ServoCheckTime = 1000
+    
+    stopWatch.pause()
+    stopWatch.reset()
+    stopWatch.resume()
+    global MinAngleLimit
+    MinAngleLimit = steeringMotor.angle()
+    while stopWatch.time()<ServoCheckTime:
+        steeringMotor.run(-500)
+        if MinAngleLimit > steeringMotor.angle():
+            MinAngleLimit = steeringMotor.angle()
+    stopWatch.pause()
+    stopWatch.reset()
+    stopWatch.resume()
+    global MaxAngleLimit
+    MaxAngleLimit = steeringMotor.angle()
+    while stopWatch.time()<ServoCheckTime:
+        steeringMotor.run(500)
+        if MaxAngleLimit < steeringMotor.angle():
+            MaxAngleLimit = steeringMotor.angle()
+    global MiddleAngle
+    MiddleAngle = (MinAngleLimit+MaxAngleLimit)/2
+    stopWatch.pause()
+    stopWatch.reset()
+    stopWatch.resume()
+    while stopWatch.time()<ServoCheckTime:
+        steeringMotor.track_target(MiddleAngle)
+    steeringMotor.reset_angle(steeringMotor.angle()-MiddleAngle)
+    MinAngleLimit -= MiddleAngle
+    MaxAngleLimit -= MiddleAngle
+    MiddleAngle = 0
 ```
 
 The gyro sensor's measurement of the robot's rotation angle is essential for precise spatial positioning. This angle adjusts the lidar data to reflect true distances, accounting for changes in position and orientation. Neglecting this leads to mapping inaccuracies, hence, rotation compensation is critical for precise navigation.
