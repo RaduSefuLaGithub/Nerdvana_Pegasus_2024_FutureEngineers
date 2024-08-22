@@ -145,7 +145,7 @@ The LEGO Technic Medium Angular Motor can be controlled using the Pybricks libra
 
 Below are the functions that we used in the code for the drive motor: TBD
 
-```mpy
+```py
 drivingMotor.run(DrivingSpeed)
 drivingMotor.brake()
 drivingMotor.reset_angle(0)
@@ -156,7 +156,7 @@ drivingMotor.reset_angle(0)
 
 First, to optimize the robot’s turning efficiency, we determined the servo limits by rotating the motor fully to the left and right, using the angle-reading function from the pybricks.pupdevices import Motor library. Additionally, we used the stopwatch tools from the pybricks.tools import StopWatch library to precisely control the timing for how long the motor should turn in each direction.
 
-```mpy
+```py
 def FindServoLimits():
     global ServoCheckTime
     ServoCheckTime = 1000
@@ -198,7 +198,7 @@ To calculate the distance between the walls and the robot’s sensors, we had to
 
 After determining the distance between the robot and the walls more accurately, we realized it would be helpful to transform the corridor where the robot is located into a range where the inner wall is at -100 and the outer wall at +100. This way, we can calculate the exact percentage of the robot's position between the two walls. By transforming the corridor into a specified range, we can control the robot's movement more precisely, allowing us to choose a specific path for it to follow throughout the test, which should make the process faster and more efficient.
 
-```mpy
+```py
 def MapTwoIntervals(intA, val, intB, intC, intD):
     mappedval = intC + (val-intA)/(intB-intA)*(intD-intC)
     return mappedval
@@ -235,13 +235,13 @@ Now that we’ve successfully implemented the functions for the driving and stee
 
 Inventor Hub code:
 
-```mpy
+```py
 
 ```
 
 Camera code:
 
-```mpy
+```py
 import pyb
 from pyb import UART
 from pupremote import PUPRemoteSensor, OPENMV
@@ -256,67 +256,6 @@ p.add_channel('blob', to_hub_fmt='hhhhh')
 # Obstacle Management <a class="anchor" id="obstacle-management"></a>
 
 ## Qualification Round <a class="anchor" id="quali-management"></a>
-
-void loop()
-{
-  distanceFront = distminFront+10;
-  timer = millis();
-  if(turns==0)
-    checkMs = 3000;
-  else
-    checkMs = 5000;
-  //distanceDR = getDistance(trigDR, echoDR);
-  //distanceDR = sonarDR.ping_cm();
-  //delay(100);
-  while(distanceFront > distminFront || distanceFront<=10)
-  {
-    read_gyro(false);
-    //delay(100);
-    if(gz>=currMiddleZ)
-    {
-      error = gz-currMiddleZ;
-      degServo = MiddleServoDeg-error;
-    }
-    else if(gz<currMiddleZ)
-    {
-      error = currMiddleZ-gz;
-      degServo = MiddleServoDeg+error;
-    }
-    Serial.print(degServo);
-    Serial.print("  ");
-    Serial.print(distanceDR);
-    Serial.print("  ");
-    Serial.println(distanceFront);
-    if(degServo>HighServoLimit)
-      degServo=HighServoLimit;
-    if(degServo<LowServoLimit)
-      degServo=LowServoLimit;
-    servo.write(degServo);
-    moveForward(500);
-
-    if(millis()-timer>checkMs)
-    {
-      if(currMiddleZ-5<=gz && gz<=currMiddleZ+5)
-      {
-        streak++;
-        if(streak==maxstreak)
-        {
-          //distanceFront = getDistance(trigFront, echoFront);
-          distanceFront = sonarFR.ping_cm();
-          //delay(100);
-          streak = 0;
-        }
-        else
-          distanceFront = distminFront+10;
-      }
-      else
-        streak = 0;
-    }
-    //distanceDR = getDistance(trigDR, echoDR);
-    //distanceDR = sonarDR.ping_cm();
-    //delay(100);
-  }
-  stopMotor();
 
 ## Final Round <a class="anchor" id="final-management"></a>
 
