@@ -21,9 +21,8 @@
 * [Code for each component](#code-for-each-component)
   * [Drive Motor](#drive-motor-code)
   * [Steering Motor](#steering-motor-code)
-  * [Camera](#camera-code)
   * [Distance Sensor](#distance-sensor-code)
-  * [IMU](#gyro-sensor-code)
+  * [Camera](#camera-code)
 * [Obstacle Management](#obstacle-management)
   * [Qualification Round](#quali-management)
   * [Final Round](#final-management)
@@ -155,7 +154,7 @@ drivingMotor.reset_angle(0)
 ## Steering Motor <a class="anchor" id="steering-motor-code"></a>
 
 
-First, to optimize the robot’s turning efficiency, we determined the servo limits by rotating the motor fully to the left and right, using the angle-reading function from the pybricks.pupdevices library. Additionally, we used the stopwatch tools from the pybricks.tools library to precisely control the timing for how long the motor should turn in each direction.
+First, to optimize the robot’s turning efficiency, we determined the servo limits by rotating the motor fully to the left and right, using the angle-reading function from the pybricks.pupdevices import Motor library. Additionally, we used the stopwatch tools from the pybricks.tools import StopWatch library to precisely control the timing for how long the motor should turn in each direction.
 
 ```mpy
 def FindServoLimits():
@@ -193,8 +192,42 @@ def FindServoLimits():
     MiddleAngle = 0
 ```
 
-The gyro sensor's measurement of the robot's rotation angle is essential for precise spatial positioning. This angle adjusts the lidar data to reflect true distances, accounting for changes in position and orientation. Neglecting this leads to mapping inaccuracies, hence, rotation compensation is critical for precise navigation.
+## Distance Sensor <a class="anchor" id="distance-sensor-code"></a>
 
+To calculate the distance between the walls and the robot’s sensors, we had to use a mathematical formula because, if the robot was misaligned, the function from the pybricks.pupdevices import UltrasonicSensor library would return inaccurate readings. Therefore, we applied trigonometry by multiplying the result by the cosine of the robot’s angle. For this, we used the umath import fabs, radians, cos library.
+
+After determining the distance between the robot and the walls more accurately, we realized it would be helpful to transform the corridor where the robot is located into a range where the inner wall is at -100 and the outer wall at +100. This way, we can calculate the exact percentage of the robot's position between the two walls. By transforming the corridor into a specified range, we can control the robot's movement more precisely, allowing us to choose a specific path for it to follow throughout the test, which should make the process faster and more efficient.
+
+```mpy
+def MapTwoIntervals(intA, val, intB, intC, intD):
+    mappedval = intC + (val-intA)/(intB-intA)*(intD-intC)
+    return mappedval
+
+global DistBetweenUltraSonics
+DistBetweenUltraSonics = 120
+def CalculateSideSensorProcentage():
+    Degrees = GetActualHeading()
+    Degrees = fabs(Degrees)
+    global RawDistST
+    global RawDistDR
+    RawDistST = ultrasonicSensorST.distance()
+    RawDistDR = ultrasonicSensorDR.distance()
+    global ProcentageDiff
+    global DistST
+    global DistDR
+    global DistBetweenUltraSonics
+    if RawDistST!=2000 and RawDistDR!=2000:#In this case, it still detects both walls at a relatively similar distance.
+        Radians = radians(Degrees)
+        DistST = RawDistST * cos(Radians)
+        DistDR = RawDistDR * cos(Radians)
+        Sum = DistST+DistBetweenUltraSonics+DistDR
+        Diff = DistST-DistDR
+        ProcentageDiff = MapTwoIntervals(-Sum, Diff, Sum, -100, 100)
+    else:
+        DistST = -1
+        DistDR = -1
+        ProcentageDiff = -210
+```
 
 ## Camera <a class="anchor" id="camera-code"></a>
 
@@ -218,107 +251,6 @@ uart = UART(3, 115200)
 p=PUPRemoteSensor(power=True)
 # Define a data channel to read on the hub
 p.add_channel('blob', to_hub_fmt='hhhhh')
-```
-
-
-
-## IMU <a class="anchor" id="gyro-sensor-code"></a>
-
-To utilize the gyro sensor, we needed to include the _BMI088.h_ library. During initialization, we allocate a 10-second window to measure the sensor's drift, allowing us to refine the robot's angular readings for greater precision. Additionally, we configure the sensor's output data rate to 400Hz and set the bandwidth to 47Hz. The bandwidth determines the frequency of data sampling by the sensor; a higher bandwidth yields more precise data at the cost of increased power consumption. We also designate pin 15 as an input and attach an interrupt to it, enabling us to capture data from the sensor as soon as it becomes available.
-
-```ino
-void gyro_setup(bool debug) {
-  int status = accel.begin();
-  status = accel.setOdr(Bmi088Accel::ODR_200HZ_BW_80HZ);
-  status = accel.pinModeInt1(Bmi088Accel::PUSH_PULL,Bmi088Accel::ACTIVE_HIGH);
-  status = accel.mapDrdyInt1(true);
-
-
-  status = gyro.begin();
-
-  status = gyro.setOdr(Bmi088Gyro::ODR_400HZ_BW_47HZ);
-  status = gyro.pinModeInt3(Bmi088Gyro::PUSH_PULL,Bmi088Gyro::ACTIVE_HIGH);
-  status = gyro.mapDrdyInt3(true);
-
-  pinMode(15,INPUT);
-  attachInterrupt(15,gyro_drdy,RISING);  
-
-
-  if(status < 0) {
-    if(debug) Serial << "BMI Initialization Error!  error: " << status << "\n";
-    //init_error = init_gyro_error = true;
-  }
-  else  {
-    // Gyro drift calculation
-    if(debug) Serial.println("Starting gyro drift calculation...");
-
-    gx = 0;
-    gy = 0;
-    gz = 0;
-
-    gyro_last_read_time = millis();
-
-    double start_time = millis();
-    while(millis() - start_time < DRIFT_TEST_TIME * 1000) {
-      gyro.readSensor();  
-      double read_time = millis();
-      gx += (gyro.getGyroX_rads() * (read_time - gyro_last_read_time) * 0.001);
-      // gy += (bmi.getGyroY_rads() * (read_time - gyro_last_read_time) * 0.001);
-      // gz += (bmi.getGyroZ_rads() * (read_time - gyro_last_read_time) * 0.001);
-
-      gyro_last_read_time = read_time;
-    }
-
-    drifts_x = gx / DRIFT_TEST_TIME;
-    // drifts_y = gy / DRIFT_TEST_TIME;
-    // drifts_z = gz / DRIFT_TEST_TIME;
-
-    if(debug) Serial.print("Drift test done!\nx: ");
-    if(debug) Serial.print(drifts_x, 6);
-    if(debug) Serial.print("   y: ");
-    if(debug) Serial.print(drifts_y, 6);
-    if(debug) Serial.print("   z: ");
-    if(debug) Serial.println(drifts_z, 6);
-  }
-  // Gyro value reset
-  gx = 0;
-  gy = 0;
-  gz = 0;
-
-  gyro_last_read_time = millis();
-}
-```
-
-Within the *read_gyro* function, we're retrieving data from the gyro sensor and adjusting it to account for any detected drift, enhancing the accuracy of the readings. Since the gyro provides data in radians, a conversion to degrees is necessary for our application. We're focusing solely on the rotation around the x-axis, hence we only compute the *gx* value, which represents the robot's angular rotation in degrees on that specific axis.
-
-```ino
-void read_gyro(bool debug) {
-  //delta_start = millis();
-  if(gyro_flag) {
-    gyro_flag = false;
-    cnt1++;
-    gyro.readSensor();   
-    double read_time = millis();
-
-    gx += ((gyro.getGyroX_rads() - drifts_x) * (read_time - gyro_last_read_time) * 0.001) * 180.0 / PI;
-    //gy -= ((bmi.getGyroY_rads() - drifts_y) * (read_time - gyro_last_read_time) * 0.001) * 180.0 / PI;
-    //gz -= ((bmi.getGyroZ_rads() - drifts_z) * (read_time - gyro_last_read_time) * 0.001) * 180.0 / PI;
-
-    gyro_last_read_time = read_time;
-
-    //delta_gyro = millis() - delta_start;
-    if(debug) Serial << "Gyro: gx: " << gx << "    gy: " << gy << "    gz: " << gz << "\n";
-
-    if(debug) {
-      Serial.print("Gyro: gx: ");
-      Serial.print(gx);
-      Serial.print(" gy: ");
-      Serial.print(gy);
-      Serial.print(" gz: ");
-      Serial.println(gz);
-    }
-  }
-}
 ```
 
 # Obstacle Management <a class="anchor" id="obstacle-management"></a>
