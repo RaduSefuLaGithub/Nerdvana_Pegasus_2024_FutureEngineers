@@ -141,14 +141,14 @@ Where to buy the OpenMV Cam H7 R2: https://openmv.io/products/openmv-cam-h7-r2
 
 ## Drive Motor <a class="anchor" id="drive-motor-code"></a>
 
-The LEGO Technic Medium Angular Motor can be controlled using the Pybricks library, allowing us to set the robot’s speed. Additionally, we can easily calculate the distance the robot has traveled by using a function that returns the motor’s rotation angle, which can be reset whenever needed.
 
-Below are the functions that we used in the code for the drive motor: TBD
+The drive motor can be easily controlled using the pybricks.pupdevices import Motor library because the functions for moving forward and braking are already implemented. A useful feature for the drive motor is the ability to calculate the distance traveled by using a function that measures the angle through which the wheels have rotated.
+
+
+To calculate the distance traveled by the robot, we first need to determine the circumference of the wheels, which is equal to 2πr. This value should then be multiplied by the angle through which the robot has rotated, as well as the gear ratio. Finally, the result should be divided by 360, which represents the total degrees in a circle.
 
 ```py
-drivingMotor.run(DrivingSpeed)
-drivingMotor.brake()
-drivingMotor.reset_angle(0)
+DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360 #Here pi is a constant that we find in umath import pi library
 ```
 
 ## Steering Motor <a class="anchor" id="steering-motor-code"></a>
@@ -197,7 +197,6 @@ We conducted several tests to make the robot turn left or right without hitting 
 To ensure the robot makes its turns at the desired angle as accurately as possible, we decided to use a PID (Proportional–Integral–Derivative) controller to adjust the steering motor's power based on the calculated angle. We set the I constant to 0 because it didn't seem to affect the program. To execute the rotation, we reduced the driving motor's speed to half of its usual value, allowing the robot to complete the maneuver more efficiently. After completing the turn, we update the robot with a new gyro offset.
 
 ```py
-global GyroOffSet, SteeringKP, SteeringKD
 def TurnLeft():
     global GyroOffSet, SteeringDeg, SteeringKP, SteeringKD
     SteeringDeg = -SteeringDeg #This variable is calculated below, where the code for the qualification round is explained.
