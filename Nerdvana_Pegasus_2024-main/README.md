@@ -20,6 +20,7 @@
 * [Circuit Diagram](#circuit-diagram)
 * [Code for each component](#code-for-each-component)
   * [Drive Motor](#drive-motor-code)
+  * [Inventor Hub](#inventor-hub-code)
   * [Steering Motor](#steering-motor-code)
   * [Distance Sensor](#distance-sensor-code)
   * [Camera](#camera-code)
@@ -30,7 +31,7 @@
 * [Resources](#resources)
   * [Images](#images-resources)
 
-### Team: Catana Radu Nicolae si Coman Andrei<a class="anchor" id="team-image"></a>
+### Team: Catana Radu Nicolae and Coman Andrei<a class="anchor" id="team-image"></a>
 
 ## Photos of our robot <b>TBD<b> <a class="anchor" id="robot-image"></a>
 
@@ -63,7 +64,7 @@ Following an evaluation of different motors, we settled on a LEGO Tehnic Medium 
 
 Where to buy the drive motor: https://raisingrobots.com/product/lego-technic-medium-angular-motor/
 
-As I mentioned, a gear connected to the motor drives a series of gears located at the base of the robot. When the gears are properly aligned, this setup ensures that both wheels rotate in the same direction. Below is the explaination of the rack:
+As I mentioned, a gear connected to the motor drives a series of gears located at the base of the robot. When the gears are properly aligned, this setup ensures that both wheels rotate in the same direction. Below is the explaination of the rack when the motor rotates counter clockwise:
 
 ![Rack Explanation](./images/Rack_Explained.jpg "Rack Explanation")
 
@@ -151,6 +152,10 @@ To calculate the distance traveled by the robot, we first need to determine the 
 DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360 #Here pi is a constant that we find in umath import pi library
 ```
 
+## Inventor Hub <a class="anchor" id="inventor-hub-code"></a>
+
+
+
 ## Steering Motor <a class="anchor" id="steering-motor-code"></a>
 
 
@@ -219,6 +224,20 @@ def TurnRight():
         steeringMotor.dc(SteeringErr*SteeringKP+(SteeringErr-LastSteeringErr)*SteeringKD)
         LastSteeringErr = SteeringErr
     GyroOffSet -= 90
+```
+
+To ensure the robot moves as straight as possible and avoids hitting the course walls, we used a PID controller for the gyro and distance sensors. This allows the robot to move smoothly forward with minimal to no error.
+
+```py
+def Do_PID(error, lasterror, kp, ki, kd):
+    P = error*kp
+    D = (error-lasterror)*kd
+    PID = P+D
+    if PID < MinAngleLimit + 5.5:
+        PID = MinAngleLimit + 5.5
+    elif MaxAngleLimit - 5.5 < PID:
+        PID = MaxAngleLimit - 5.5
+    steeringMotor.run_target(1000, PID)
 ```
 
 ## Distance Sensor <a class="anchor" id="distance-sensor-code"></a>
@@ -386,7 +405,6 @@ while True:
     else:
         cubeType = -1;
     p.update_channel('blob',cubeType,x,y,pixels,lowestBlackY)
-    #print(cubeType, x, y, pixels, lowestBlackY);
     state=p.process()
 ```
 
@@ -400,64 +418,8 @@ For the final round resolution, we adopted a three-tiered modular approach to ac
 
 The initial segment serves as the core switch-case structure within our code, where we continuously monitor for any cubes to avoid or for cues to initiate a rotation in preparation for the upcoming section. Should neither of these conditions arise, the robot is programmed to maintain a direct trajectory through the segment, ensuring uninterrupted progress.
 
-```ino
-case SECTION: {
-  if(turn_ok && wall_dist[FRONT] && wall_dist[FRONT] < 700  && millis() - last_rotate > rotate_timeout) {
-    turns++;
-    last_rotate = millis();
-    last_cube_color = 0;
-    last_dist_to_cube = 0;
-    flag = 0;
-    cube_section_cnt = 0;
-    if (wall_dist[side_wall] > 550)
-      CASE = ROTATE;
-    else
-      current_angle += direction * 90;   
-  } else if (last_dist_to_cube && cube_color != last_cube_color && cube_color != 0 && wall_dist[BACK] < 1800) {
-    move_servo(cube_color * 1);
+```py
 
-    if (cube_color == GREEN) {
-      if(direction == 1)
-        goal_distance = 250 + (wall_dist[side_wall] - 230) / 6;
-      else
-        goal_distance = 850 - (1000 - wall_dist[side_wall]) / 6;
-    } else {
-      if(direction == 1)
-        goal_distance = 770 - (1000 - wall_dist[side_wall]) / 5;
-      else
-        goal_distance = 270 + (wall_dist[side_wall] - 200) / 5;
-    }
-
-    last_cube_color = cube_color;
-    cube_section_cnt++;
-
-    if(turns == 3) {
-      final_cube_color = last_cube_color;
-      final_cube_pos = cube_section_cnt;
-      final_cube_turn = turns;
-    } 
-    if(turns == 4) {
-      if(last_cube_y < 1700) {
-        final_cube_color = last_cube_color;
-        final_cube_pos = cube_section_cnt;
-        final_cube_turn = turns;
-      }
-    }
-    
-    CASE = AVOID_CUBE;
-  } else {
-
-    if(millis() - last_turn_ok > rotate_timeout && (wall_dist[BACK] > 1850 || (wall_dist[LEFT] + wall_dist[RIGHT]) > 1200) && !turn_ok) {
-      turn_ok = 1;
-      last_turn_ok = millis();
-    }
-    pid_error_gyro = ((current_angle) - gx) * kp_gyro + (pid_error_gyro - pid_last_error_gyro) * kd_gyro;
-    pid_last_error_gyro = pid_error_gyro;
-
-    move_servo(pid_error_gyro);
-  }
-  break;
-}
 ```
 
 # Randomizer <a class="anchor" id="randomizer"></a>
