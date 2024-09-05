@@ -1,4 +1,4 @@
-<center><h1> Nerdvana Pegasus 2023 </center>
+<center><h1> Nerdvana Pegasus 2024 </center>
 
 ## Table of Contents
 * [Photos](#team-image)
@@ -265,7 +265,9 @@ Now that we’ve successfully implemented the functions for the driving and stee
 Inventor Hub code:
 
 ```py
-
+from pupremote import PUPRemoteHub
+p=PUPRemoteHub(Port.E)
+p.add_command('blob','hhhhh')
 ```
 
 Camera code:
@@ -280,6 +282,112 @@ uart = UART(3, 115200)
 p=PUPRemoteSensor(power=True)
 # Define a data channel to read on the hub
 p.add_channel('blob', to_hub_fmt='hhhhh')
+```
+
+First, we configured the camera to differentiate between colors, allowing the robot to determine whether it should go around an obstacle or stay on its current path.
+
+```py
+import sensor
+import image
+import time
+import math
+red_index = 0  # 0 for red,
+green_index = 1 # 1 for green,
+black_index = 2 # 2 for black,
+# Color Tracking Thresholds (L Min, L Max, A Min, A Max, B Min, B Max)
+# The below thresholds track in general red/green/blue things. You may wish to tune them...
+thresholds = [
+    (35, 79, 26, 72, -17, 72),  # generic_red_thresholds
+    (20, 59, -40, -10, -28, 6),  # generic_green_thresholds
+    (0, 31, -18, 14, -26, 13),  # generic_black_thresholds
+]
+sensor.reset()
+sensor.set_pixformat(sensor.RGB565)
+sensor.set_framesize(sensor.QVGA)
+# Set White Balance values manually
+# Adjust the values to see the effect. These are example values and may need to be fine-tuned.
+sensor.__write_reg(0x00, 0b10000000)  # Gain
+sensor.__write_reg(0x01, 0b00000000)  # Blue Gain for White Balance
+sensor.__write_reg(0x02, 0b11111111)  # Red Gain for White Balance
+sensor.__write_reg(0x03, 0b00000000)  # Green Gain for White Balance
+## Disable night mode and BLC (Backlight Compensation)
+sensor.__write_reg(0x0E, 0b00000000)  # Disable night mode
+sensor.__write_reg(0x3E, 0b00000000)  # Disable BLC
+# Disable auto gain, white balance, and exposure
+sensor.set_auto_gain(False, gain_db=0)  # Must be turned off for color tracking
+sensor.set_auto_whitebal(False, rgb_gain_db=(1.5, 1.5, 1.5))  # Must be turned off for color tracking
+sensor.set_auto_exposure(False, exposure_us=10000)
+# Set contrast, saturation, etc.
+sensor.set_brightness(3)
+sensor.set_contrast(3)  # range -3 to +3
+sensor.set_saturation(3)  # range -3 to +3
+sensor.set_framerate(40)
+clock = time.clock()
+sensor.set_vflip(True);
+sensor.set_hmirror(True);
+sensor.skip_frames(time=2000)
+# Only blobs that with more pixels than "pixel_threshold" and more area than "area_threshold" are
+# returned by "find_blobs" below. Change "pixels_threshold" and "area_threshold" if you change the
+# camera resolution. "merge=True" merges all overlapping blobs in the image.
+sensor.set_windowing(0, 55, 400, 240);
+```
+
+Once our camera is set up to capture the image, we search for blobs of different colors in its view. This allows us to identify the position of a specific color we want to detect. By analyzing the returned pixels, we can determine which color is the closest and estimate how far the cube and wall are from the robot's camera.
+
+```py
+while True:
+    clock.tick()
+    img = sensor.snapshot()
+    lowestBlackY = -1;
+    for blob in img.find_blobs(
+        [thresholds[black_index]],
+        pixels_threshold=3500,
+        area_threshold=3500,
+        merge=True,
+    ):
+        if lowestBlackY < blob.y() + blob.h() - 1:
+            lowestBlackY = blob.y() + blob.h() - 1;
+
+    MaxRedPixels = 0
+    ClosestBlob = -1;
+    isred = True;
+    for blob in img.find_blobs(
+        [thresholds[red_index]],
+        pixels_threshold=400,
+        area_threshold=400,
+        merge=True,
+    ):
+        if MaxRedPixels < blob.pixels() and blob.y() + blob.h() - 1 < 150:
+            MaxRedPixels = blob.pixels()
+            ClosestBlob = blob
+    for blob in img.find_blobs(
+        [thresholds[green_index]],
+        pixels_threshold=200,
+        area_threshold=200,
+        merge=True,
+    ):
+        if MaxRedPixels < blob.pixels():
+            MaxRedPixels = blob.pixels()
+            ClosestBlob = blob
+            isred = False;
+    x = -1;
+    y = -1;
+    pixels = -1;
+    if ClosestBlob != -1:
+        if isred == True:
+            cubeType = 1
+        else:
+            cubeType = 2
+        # These values are stable all the time.
+        x = ClosestBlob.cx();
+        y = ClosestBlob.cy();
+        pixels = MaxRedPixels;
+        # Note - the blob rotation is unique to 0-180 only.
+    else:
+        cubeType = -1;
+    p.update_channel('blob',cubeType,x,y,pixels,lowestBlackY)
+    #print(cubeType, x, y, pixels, lowestBlackY);
+    state=p.process()
 ```
 
 # Obstacle Management <a class="anchor" id="obstacle-management"></a>
@@ -380,4 +488,4 @@ You may copy, download, store (in any medium), adapt, or modify the content of t
 
 For any other use of Nerdvana Romania's content, please get in touch with us at office@nerdvana.ro.
 
-© 2023 Nerdvana Romania. All rights reserved.
+© 2024 Nerdvana Romania. All rights reserved.
