@@ -32,8 +32,9 @@
   * [Images](#images-resources)
 
 ### Team: Catana Radu Nicolae and Coman Andrei<a class="anchor" id="team-image"></a>
+![Team](./images/team-image.jpeg)
 
-## Photos of our robot <b>TBD<b> <a class="anchor" id="robot-image"></a>
+## Photos of our robot <a class="anchor" id="robot-image"></a>
 
 | <img src="./images/robot_images/front.jpeg" width="90%" /> | <img src="./images/robot_images/back.jpeg" width="85%" /> | 
 | :--: | :--: | 
@@ -42,6 +43,12 @@
 | *Left* | *Right* |
 | <img src="./images/robot_images/top.jpeg" width="90%" /> | <img src="./images/robot_images/bottom.jpeg" width="85%" /> | 
 | *Top* | *Bottom* |
+
+<br>
+
+
+## Our video of the robot on [Youtube](https://youtu.be/OukqeuoSe7s) <a class="anchor" id="video"></a>
+
 
 <br>
 
