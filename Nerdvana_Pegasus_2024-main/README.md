@@ -155,6 +155,23 @@ DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360 #Here pi is a
 ## Inventor Hub <a class="anchor" id="inventor-hub-code"></a>
 
 
+After several test laps, we noticed that the robot sometimes started to veer off course. Upon closer observation, we realized the robot was experiencing a gyro drift, causing it to not always recognize the forward direction as 0. To address this, we created a function that continuously tracks the robot's heading, allowing it to maintain a straight path and avoid drifting.
+
+```py
+def GetGyroDrift(sampleSize):
+    avgDrift = -210
+    for i in range(0, sampleSize):
+        if avgDrift != -210:
+            avgDrift = (avgDrift+hub.imu.heading())/2
+        else:
+            avgDrift = hub.imu.heading()
+    return avgDrift
+
+def GetActuallHeading():
+    global GyroOffSet, AvgGyroDrift
+    heading = hub.imu.heading()+GyroOffSet-AvgGyroDrift
+    return heading
+```
 
 ## Steering Motor <a class="anchor" id="steering-motor-code"></a>
 
@@ -483,9 +500,7 @@ In the end, to return to its starting position, we programmed the robot to trave
 
 ## Final Round <a class="anchor" id="final-management"></a>
 
-For the final round resolution, we adopted a three-tiered modular approach to achieve greater precision and fluidity. The first module is designed for navigating through the current section, the second for detecting and evading any immediate cubes, and the third for executing rotations and setting up for the following section.
 
-The initial segment serves as the core switch-case structure within our code, where we continuously monitor for any cubes to avoid or for cues to initiate a rotation in preparation for the upcoming section. Should neither of these conditions arise, the robot is programmed to maintain a direct trajectory through the segment, ensuring uninterrupted progress.
 
 ```py
 
