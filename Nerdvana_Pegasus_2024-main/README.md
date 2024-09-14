@@ -508,8 +508,112 @@ In the end, to return to its starting position, we programmed the robot to trave
 ## Final Round <a class="anchor" id="final-management"></a>
 
 
+To successfully complete the final round, we followed the same approach as in the qualification round, with our only challenge being how to avoid the red and green cubes. To help the robot know when to navigate around the cubes, we used the camera's OX axis to determine the angle of the obstacle relative to the robot. By applying trigonometry, we were able to calculate the cube's position, allowing us to determine quickly and accurately when the robot should turn
 
 ```py
+def CalculateCubePos():
+    global Heading, Xangle, SideDist, s1, s2, Daprox #Xangle = MapTwoIntervals(0, x, HorizontalResolution-1, -HorizontalFOV/2, HorizontalFOV/2)
+    Xtan = tan(radians(Heading+Xangle))
+    D1 = s1 / Xtan
+    D2 = s2 / Xtan
+    D1Aux = D1
+    D2Aux = D2
+    if Xangle+Heading < 0 and s1 < 0 and s2 >= 0 and (-7 > Xangle+Heading or Xangle+Heading > 7):
+        SideDist = s1
+        RealD = D1
+    elif Xangle+Heading < 0 and s1 >= 0 and s2 < 0 and (-7 > Xangle+Heading or Xangle+Heading > 7):
+        SideDist = s2
+        RealD = D2
+    elif Xangle+Heading >= 0 and s1 >= 0 and s2 < 0 and (-7 > Xangle+Heading or Xangle+Heading > 7):
+        SideDist = s1
+        RealD = D1
+    elif Xangle+Heading >= 0 and s1 < 0 and s2 >= 0 and (-7 > Xangle+Heading or Xangle+Heading > 7):
+        SideDist = s2
+        RealD = D2
+    else:
+        if Daprox <= D1:
+            D1 = D1 - Daprox
+        else:
+            D1 = Daprox - D1
+        if Daprox <= D2:
+            D2 = D2 - Daprox
+        else:
+            D2 = Daprox - D2
+
+        if D1 < D2:
+            SideDist = s1
+            RealD = D1Aux
+        else:
+            SideDist = s2
+            RealD = D2Aux
+```
+
+To navigate around the cubes, we used a method called "sideshift." This allows the robot to move around an obstacle and return to its original direction. First, the robot follows a pre-calculated circular path to one side of the obstacle. Then, it shifts to follow the same circular path in the opposite direction. This way, the robot successfully avoids the cube while positioning itself correctly, maintaining its original direction.
+
+```py
+def SideShift(shiftMM, CheckForTurn):
+    mm = drivingMotor.angle()
+    global ShouldTurn, DistanceMM, BeforeTurnMM, DistSTBefTurn, DistDRBefTurn, Heading
+    DistanceMM = mm*GearRatio*2*pi*WheelRadiusMM/360
+    steerDeg = MapTwoIntervals(0, abs(shiftMM)/2, MinCircleR, 0, 90)
+    AddMM = abs(shiftMM)
+    if AddMM > MinCircleR*2:
+        AddMM = MinCircleR*2
+    plusdeg = AddMM*360/GearRatio/2/pi/WheelRadiusMM
+    global Streak
+    inrdeg = 15*steerDeg/100
+    lasterr = 0
+    if shiftMM > 0:
+        while GetActuallHeading() < steerDeg-inrdeg:
+            drivingMotor.run(500)
+            steeringMotor.dc(1000)
+            if CheckForTurn == True and ShouldTurn == False:
+                DistanceMM = mm*GearRatio*2*pi*WheelRadiusMM/360+AddMM/2*MapTwoIntervals(0, GetActuallHeading(), steerDeg, 0, 1)
+                Heading = GetActuallHeading()
+                CalculateSideSensorProcentage(True)
+                cubeType, x, y, pixels, lowestBlackY = p.call('blob')
+                ShouldTurn = CheckIfTurn()
+                if ShouldTurn == True:
+                    DistSTBefTurn = 500
+                    DistDRBefTurn = 500
+        while GetActuallHeading() > inrdeg+15:
+            drivingMotor.run(500)
+            steeringMotor.dc(-1000)
+            if CheckForTurn == True and ShouldTurn == False:
+                DistanceMM = mm*GearRatio*2*pi*WheelRadiusMM/360+AddMM/2+AddMM/2*MapTwoIntervals(steerDeg, GetActuallHeading(), 0, 0, 1)
+                Heading = GetActuallHeading()
+                CalculateSideSensorProcentage(True)
+                cubeType, x, y, pixels, lowestBlackY = p.call('blob')
+                ShouldTurn = CheckIfTurn()
+                if ShouldTurn == True:
+                    DistSTBefTurn = 500
+                    DistDRBefTurn = 500
+    else:
+        while GetActuallHeading() > -(steerDeg-inrdeg):
+            drivingMotor.run(500)
+            steeringMotor.dc(-1000)
+            if CheckForTurn == True and ShouldTurn == False:
+                DistanceMM = mm*GearRatio*2*pi*WheelRadiusMM/360+AddMM/2*MapTwoIntervals(0, GetActuallHeading(), -steerDeg, 0, 1)
+                Heading = GetActuallHeading()
+                CalculateSideSensorProcentage(True)
+                cubeType, x, y, pixels, lowestBlackY = p.call('blob')
+                ShouldTurn = CheckIfTurn()
+                if ShouldTurn == True:
+                    DistSTBefTurn = 500
+                    DistDRBefTurn = 500
+        while GetActuallHeading() < -(inrdeg+15):
+            drivingMotor.run(500)
+            steeringMotor.dc(1000)
+            if CheckForTurn == True and ShouldTurn == False:
+                DistanceMM = mm*GearRatio*2*pi*WheelRadiusMM/360+AddMM/2+AddMM/2*MapTwoIntervals(-steerDeg, GetActuallHeading(), 0, 0, 1)
+                Heading = GetActuallHeading()
+                CalculateSideSensorProcentage(True)
+                cubeType, x, y, pixels, lowestBlackY = p.call('blob')
+                ShouldTurn = CheckIfTurn()
+                if ShouldTurn == True:
+                    DistSTBefTurn = 500
+                    DistDRBefTurn = 500
+    drivingMotor.reset_angle(mm+plusdeg)
 
 ```
 
