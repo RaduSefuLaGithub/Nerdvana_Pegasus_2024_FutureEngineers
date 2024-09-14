@@ -412,6 +412,75 @@ while True:
 
 ## Qualification Round <a class="anchor" id="quali-management"></a>
 
+
+To successfully complete the qualification round, we decided to assign the robot a specific path to follow in a straight line. We implemented a gyro follower to ensure the robot stays as accurate as possible. Additionally, we used a wall follower to help the robot determine its path, as the distance between the walls can vary. If the walls are closer together, the robot is in a "narrow" corridor; otherwise, it's in a "wide" one.
+
+```py
+Heading = GetActuallHeading()
+CalculateSideSensorProcentage()
+if -LaneSize/2+MiddleLaneAux < ProcentageDiff < LaneSize/2+MiddleLaneAux:
+        error = -Heading
+        Do_PID(error, lasterror, HeadingKP, 0, HeadingKD)
+        lasterror = error
+        lasterrorwall = 0
+    else:
+        if RawDistST != 2000 and RawDistDR != 2000:
+            ProcentageFromLane = ProcentageDiff-MiddleLaneAux
+            error = -ProcentageFromLane
+            Do_PID(error, lasterrorwall, WallKP, 0, WallKD)
+            lasterrorwall = error
+            lasterror = 0
+        else:
+            error = -Heading
+            Do_PID(error, lasterror, HeadingKP, 0, HeadingKD)
+            lasterror = error
+            lasterrorwall = 0
+```
+
+To determine when the robot needs to turn, we check if it has traveled a set distance, if any sensor suddenly detects a wall at a great distance, or if it gets too close to the wall in front of it. Once we identify the need to turn, the robot makes a fairly precise rotation, positioning itself correctly on the desired path while turning. Typically, the robot travels down the center of the corridor, but we can adjust its path as needed. This allows us to complete the course faster by positioning the robot closer to the inner wall.
+
+```py
+    MiddleLaneMM =  MapTwoIntervals(-100, MiddleLane, 100, 0, TurnSize) + 1000 - TurnSize #TurnSize is whether 600 or 1000
+    a = MiddleLaneMM - (DistanceMM-BeforeTurnMM) #BeforeTurnMM = the distance the robot travels until one of its sensors no longer detects the wall nearby
+    if TurnSize == 600: #If it is a narrow corridor
+        a = a - 400
+    lasterror = 0
+    while a < MinCircleR: #MinCircleR = the radius we calculate for the robot to follow the circumference of the largest circle it can turn within
+        drivingMotor.run(-DrivingSpeed)
+        Heading = GetActuallHeading()
+        error = Heading
+        Do_PID(error, lasterror, HeadingKP, 0, HeadingKD)
+        lasterror = error
+        DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360
+        a = MiddleLaneMM - (DistanceMM-BeforeTurnMM)
+        if TurnSize == 600:
+            a = a - 400
+    drivingMotor.hold()
+    if Dir == -1: #If dir is -1 then the robot needs to turn left, else it needs to turn right
+        d = DistSTBefTurn #The distance detected by the left sensor before the robot makes a turn
+    elif Dir == 1:
+        d = DistDRBefTurn #The distance detected by the right sensor before the robot makes a turn
+    lasterror = 0
+    while a > d:
+        drivingMotor.run(DrivingSpeed)
+        Heading = GetActuallHeading()
+        error = -Heading
+        Do_PID(error, lasterror, HeadingKP, 0, HeadingKD)
+        lasterror = error
+        DistanceMM = drivingMotor.angle()*GearRatio*2*pi*WheelRadiusMM/360
+        a = MiddleLaneMM - (DistanceMM-BeforeTurnMM)
+        if TurnSize == 600:
+            a = a - 400
+    DistBefCubeLine = d-a
+    SteeringDeg = CalculateSteeringAngle(DistBetweenWheelAxis, a)
+    if Dir == -1:
+        TurnLeft()
+    elif Dir == 1:
+        TurnRight()
+```
+
+In the end, to return to its starting position, we programmed the robot to travel a specific distance set by us, without any additional exit conditions.
+
 ## Final Round <a class="anchor" id="final-management"></a>
 
 For the final round resolution, we adopted a three-tiered modular approach to achieve greater precision and fluidity. The first module is designed for navigating through the current section, the second for detecting and evading any immediate cubes, and the third for executing rotations and setting up for the following section.
